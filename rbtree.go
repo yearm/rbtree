@@ -45,44 +45,54 @@ func NewRBTree() *RBTree {
            /   \          /    \
           b     c        a      b
 */
-func (this *RBTree) leftRotate(n *node) {
-	if n.right == nil {
+func (this *RBTree) leftRotate(x *node) {
+	if x.right == nil {
 		return
 	}
-	rn := n.right
-	n.right = rn.left
-	if rn.left != nil {
-		n.left = rn.right
+	y := x.right
+	x.right = y.left //Y的左节点变为X的右节点
+	if x.right != nil { //???
+		y.parent = x
 	}
-	//TODO
+	y.parent = x.parent //Y节点的父节点为X节点的父节点
+	if x.parent == nil { //如果X节点的父节点为nil，则Y就是根节点
+		this.root = y
+	} else if x == x.parent.left { //如果X节点为父节点的左节点，则将Y变为该父节点的左节点
+		x.parent.left = y
+	} else {
+		x.parent.right = y
+	}
+	y.left = x //旋转，X成为Y的左节点，X的父节点为Y
+	x.parent = y
 }
 
 //右旋
 func (this *RBTree) rightRotate(n *node) {
-
+	//TODO
 }
 
 //查找节点
 func (this *RBTree) Get(value int) *node {
+	//TODO
 	return nil
 }
 
 //插入节点
 func (this *RBTree) Insert(value int) {
-
+	//TODO
 }
 
 //修复插入节点
 func (this *RBTree) insertFixup(n *node) {
-
+	//TODO
 }
 
 //删除节点
 func (this *RBTree) Delete(value int) {
-
+	//TODO
 }
 
 //修复删除节点
 func (this *RBTree) deleteFixup() {
-
+	//TODO
 }
