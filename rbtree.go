@@ -41,7 +41,7 @@ func NewRBTree() *RBTree {
         |                        |
         X                        Y
      /      \                 /      \
-    a        Y     ======>   X        c
+    a        Y    =======>   X        c
            /   \          /    \
           b     c        a      b
 */
@@ -49,11 +49,9 @@ func (this *RBTree) leftRotate(x *node) {
 	if x.right == nil {
 		return
 	}
-	y := x.right
-	x.right = y.left //Y的左节点变为X的右节点
-	if x.right != nil { //???
-		y.parent = x
-	}
+	y := x.right        //Y为X的左孩子
+	x.right = y.left    //X的右节点为Y的左节点
+	y.left.parent = x   //Y节点的左节点的父节点为X
 	y.parent = x.parent //Y节点的父节点为X节点的父节点
 	if x.parent == nil { //如果X节点的父节点为nil，则Y就是根节点
 		this.root = y
@@ -67,8 +65,31 @@ func (this *RBTree) leftRotate(x *node) {
 }
 
 //右旋
-func (this *RBTree) rightRotate(n *node) {
-	//TODO
+/*
+            |                    |
+            Y                    X
+         /      \             /      \
+        X        c  ======>  a        Y
+     /    \                         /   \
+    a      b                       b     c
+*/
+func (this *RBTree) rightRotate(y *node) {
+	if y.left == nil {
+		return
+	}
+	x := y.left         //X为Y的左孩子
+	y.left = x.right    //Y的左节点为X的右节点
+	x.right.parent = y  //X右节点的父节点为Y
+	x.parent = y.parent //X的父节点为Y的父节点
+	if y.parent == nil { //如果Y的父节点为空，那么X就为根节点
+		this.root = x
+	} else if y == y.parent.left {
+		y.parent.left = x
+	} else {
+		y.parent.right = x
+	}
+	x.right = y
+	y.parent = x
 }
 
 //查找节点
