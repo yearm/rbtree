@@ -83,18 +83,27 @@ func (this *RBTree) rightRotate(y *node) {
 	x.parent = y.parent //X的父节点为Y的父节点
 	if y.parent == nil { //如果Y的父节点为空，那么X就为根节点
 		this.root = x
-	} else if y == y.parent.left {
+	} else if y == y.parent.left { //如果Y为Y父节点的左节点，那么Y父节点的左节点为X
 		y.parent.left = x
 	} else {
 		y.parent.right = x
 	}
-	x.right = y
+	x.right = y //旋转，X的右节点为Y，Y的父节点为X
 	y.parent = x
 }
 
 //查找节点
 func (this *RBTree) Get(value int) *node {
-	//TODO
+	n := this.root
+	for n != nil {
+		if value < n.value { //小于当前节点就往左找
+			n = n.left
+		} else if value > n.value { //大于当前节点往右找
+			n = n.right
+		} else {
+			return n
+		}
+	}
 	return nil
 }
 
