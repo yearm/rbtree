@@ -108,8 +108,31 @@ func (this *RBTree) Get(value int) *node {
 }
 
 //插入节点
-func (this *RBTree) Insert(value int) {
-	//TODO
+func (this *RBTree) Insert(v int) {
+	if this.root == nil { //没有根节点则当前节点为根节点
+		this.root = &node{color: BLACK, value: v,}
+	}
+	n := this.root
+	insertNode := &node{color: RED, value: v}
+	var insertNodeParent *node //插入节点的父节点
+	for n != nil { //确定插入节点的父节点
+		insertNodeParent = n
+		if v < n.value {
+			n = n.left
+		} else if v > n.value {
+			n = n.right
+		} else {
+			//插入相同的值
+			return
+		}
+	}
+	insertNode.parent = insertNodeParent //设置新节点的父节点
+	if v < insertNodeParent.value {
+		insertNodeParent.left = insertNode
+	} else {
+		insertNodeParent.right = insertNode
+	}
+	this.insertFixup(insertNode)
 }
 
 //修复插入节点
