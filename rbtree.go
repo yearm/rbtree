@@ -135,9 +135,54 @@ func (this *RBTree) Insert(v int) {
 	this.insertFixup(insertNode)
 }
 
-//修复插入节点
+//修复插入节点(核心思路:将红色的节点移到根节点，然后将根节点设为黑色)
+/*
+1、当前节点的父节点是红色，且当前节点的叔叔节点也为红色
+   处理方式：将父节点和叔叔节点设置为黑色，将祖父节点设置为红色并为当前节点，继续对当前节点进行操作
+2、当前节点的父节点为红色，叔叔节点为黑色，且当前节点为父节点的右节点
+   处理方式：将父节点作为新的当前节点，对新的当前节点为支点进行左旋
+3、当前节点的父节点为红色，叔叔节点为黑色，且当前节点为父节点的左节点
+   处理方式：将父节点设为黑色，祖父节点设为红色，以祖父节点为支点进行右旋
+*/
 func (this *RBTree) insertFixup(n *node) {
-	//TODO
+	for n.parent.color == RED {
+		if n.parent == n.parent.parent.left { //当前节点的父节点为祖父节点的左孩子
+			uncleNode := n.parent.parent.right
+			if uncleNode.color == RED { //case 1
+				n.parent.color = BLACK
+				uncleNode.color = BLACK
+				n.parent.parent.color = RED
+				n = n.parent.parent
+			} else { //叔叔节点为黑色
+				if uncleNode == uncleNode.parent.left { //case 3
+					uncleNode.parent.color = BLACK
+					uncleNode.parent.parent.color = RED
+					this.rightRotate(uncleNode.parent.parent)
+				} else { //case 2
+					uncleNode = uncleNode.parent
+					this.leftRotate(uncleNode)
+				}
+			}
+		} else {
+			uncleNode := n.parent.parent.left
+			if uncleNode.color == RED { //case 1
+				n.parent.color = BLACK
+				uncleNode.color = BLACK
+				n.parent.parent.color = RED
+				n = n.parent.parent
+			} else { //叔叔节点为黑色
+				if uncleNode == uncleNode.parent.left { //case 3
+					uncleNode.parent.color = BLACK
+					uncleNode.parent.parent.color = RED
+					this.rightRotate(uncleNode.parent.parent)
+				} else { //case 2
+					uncleNode = uncleNode.parent
+					this.leftRotate(uncleNode)
+				}
+			}
+		}
+	}
+	this.root.color = BLACK
 }
 
 //删除节点
